@@ -89,6 +89,9 @@ d3.csv("colleges.csv").then((data) => {
                         .map(([key, value]) => `<strong>${key}:</strong> ${value}`)
                         .join("<br>")
                 );
+            const region = d.Region;
+            console.log(region);
+            highlightRegion(region);
         })
         .on("mousemove", function (event) {
             tooltip
@@ -97,6 +100,7 @@ d3.csv("colleges.csv").then((data) => {
         })
         .on("mouseout", function () {
             tooltip.style("visibility", "hidden");
+            resetRegions();
         });
 
     // Add a legend for public/private schools
@@ -122,6 +126,27 @@ d3.csv("colleges.csv").then((data) => {
             .style("alignment-baseline", "middle");
     });
 });
+
+function highlightRegion(selectedRegion) {
+    svg2.selectAll("path")
+        .attr("fill", (d) => {
+            const stateName = d.properties.name;
+            const region = stateToRegion[stateName]; // Get the region of the state
+            return region === selectedRegion
+                ? regionColors(region) // Keep the color for the selected region
+                : "#ccc"; // Grey out other regions
+        });
+}
+
+// Reset all regions to their original colors
+function resetRegions() {
+    svg2.selectAll("path")
+        .attr("fill", (d) => {
+            const stateName = d.properties.name;
+            const region = stateToRegion[stateName]; // Get the region of the state
+            return region ? regionColors(region) : "#ccc"; // Restore original color
+        });
+}
 
 
 // US MAP (SVG 2)
