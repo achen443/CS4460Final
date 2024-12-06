@@ -18,7 +18,6 @@ d3.csv("colleges.csv").then((data) => {
     data.forEach((d) => {
         d["ACT Median"] = +d["ACT Median"];
         d["Admission Rate"] = +d["Admission Rate"];
-        d[""]
     });
 
     // Set the scales
@@ -53,6 +52,11 @@ d3.csv("colleges.csv").then((data) => {
         .style("text-anchor", "middle")
         .text("ACT Median");
 
+    // Define a color scale for public vs private
+    const colorScale = d3.scaleOrdinal()
+        .domain(["Public", "Private"])
+        .range(["#1f77b4", "#ff7f0e"]); // Colors for public and private
+
     // Add circles for each college
     svg.selectAll("circle")
         .data(data)
@@ -61,7 +65,7 @@ d3.csv("colleges.csv").then((data) => {
         .attr("cx", (d) => xScale(d["Admission Rate"]))
         .attr("cy", (d) => yScale(d["ACT Median"]))
         .attr("r", 5)
-        .attr("fill", "blue")
+        .attr("fill", (d) => colorScale(d.Control)) // Assign color based on Control
         .attr("opacity", 0.7);
 
     // Add tooltips displaying all data
@@ -92,4 +96,27 @@ d3.csv("colleges.csv").then((data) => {
         .on("mouseout", function () {
             tooltip.style("visibility", "hidden");
         });
+
+    // Add a legend for public/private schools
+    const legend = svg.append("g")
+        .attr("class", "legend")
+        // .attr("transform", `translate(${width - 20}, 4)`); // Adjust legend position
+        .attr("transform", `translate(10, 10)`);
+
+    const categories = ["Public", "Private"];
+
+    categories.forEach((category, i) => {
+        legend.append("circle")
+            .attr("cx", 0)
+            .attr("cy", i * 20)
+            .attr("r", 5)
+            .attr("fill", colorScale(category));
+
+        legend.append("text")
+            .attr("x", 15)
+            .attr("y", i * 20 + 5)
+            .text(category)
+            .style("font-size", "12px")
+            .style("alignment-baseline", "middle");
+    });
 });
