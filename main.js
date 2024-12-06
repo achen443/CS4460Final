@@ -180,13 +180,13 @@ const mapContainer = d3.select("body")
     .style("vertical-align", "top");
 
 // Set dimensions for the map
-const mapWidth = 800;
-const mapHeight = 600;
+const mapWidth = 800 - margin.left - margin.right;
+const mapHeight = 600 - margin.top - margin.bottom;
 
 // Create the projection
 const projection = d3.geoAlbersUsa()
-    .scale(1100)
-    .translate([mapWidth / 2, mapHeight / 2]);
+    .scale(1000)
+    .translate([mapWidth / 2 + 70, mapHeight / 2]);
 
 // Path generator
 const path = d3.geoPath().projection(projection);
@@ -277,7 +277,7 @@ Promise.all([
             .attr("width", 15)
             .attr("height", 15)
             .attr("fill", regionColors(region));
-
+    
         legend.append("text")
             .attr("x", 20)
             .attr("y", i * 20 + 12)
