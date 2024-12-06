@@ -133,8 +133,9 @@ const mapContainer = d3.select("body")
     .style("display", "inline-block")
     .style("vertical-align", "top");
 
-    const mapWidth = 800;
-    const mapHeight = 600;
+// Set dimensions for the map
+const mapWidth = 800;
+const mapHeight = 600;
 
 // Create the projection
 const projection = d3.geoAlbersUsa()
@@ -144,15 +145,39 @@ const projection = d3.geoAlbersUsa()
 // Path generator
 const path = d3.geoPath().projection(projection);
 
-// Append an SVG for the map
+// Append an SVG for the map inside the map container
 const svg2 = mapContainer
     .append("svg")
     .attr("width", mapWidth)
     .attr("height", mapHeight)
     .style("border", "1px solid black");
 
-// Load GeoJSON or TopoJSON file
-d3.json("states.json").then((us) => {
+// Tooltip for region-college mapping
+const tooltip = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("background-color", "white")
+    .style("border", "1px solid black")
+    .style("padding", "10px")
+    .style("visibility", "hidden");
+
+// Load CSV for colleges and map GeoJSON
+Promise.all([
+    d3.csv("colleges.csv"),
+    d3.json("states.json")
+]).then(([colleges, us]) => {
+    // Map colleges to regions directly
+    const regionToColleges = {};
+    colleges.forEach(college => {
+        const region = college.Region;
+        if (region) {
+            if (!regionToColleges[region]) {
+                regionToColleges[region] = [];
+            }
+            regionToColleges[region].push(college.Name);
+        }
+    });
+
     const states = topojson.feature(us, us.objects.states).features;
 
     // Draw the map
@@ -163,11 +188,33 @@ d3.json("states.json").then((us) => {
         .attr("d", path)
         .attr("fill", (d) => {
             const stateName = d.properties.name; // State name from GeoJSON
-            const region = stateToRegion[stateName]; // Find the region
+            const region = stateToRegion[stateName]; // Map state to region
             return region ? regionColors(region) : "#ccc"; // Assign color or default
         })
         .attr("stroke", "black")
-        .attr("stroke-width", 1);
+        .attr("stroke-width", 1)
+        .on("mouseover", function (event, d) {
+            const stateName = d.properties.name;
+            const region = stateToRegion[stateName];
+            const collegesInRegion = region ? regionToColleges[region] : [];
+            tooltip
+                .style("visibility", "visible")
+                .html(
+                    `<strong>Region:</strong> ${region || "Unknown"}<br>` +
+                    `<strong>Colleges:</strong><br>` +
+                    (collegesInRegion && collegesInRegion.length > 0
+                        ? collegesInRegion.join("<br>")
+                        : "No colleges")
+                );
+        })
+        .on("mousemove", function (event) {
+            tooltip
+                .style("top", `${event.pageY + 10}px`)
+                .style("left", `${event.pageX + 10}px`);
+        })
+        .on("mouseout", function () {
+            tooltip.style("visibility", "hidden");
+        });
 
     // Add a legend
     const legend = svg2.append("g")
@@ -189,4 +236,4 @@ d3.json("states.json").then((us) => {
             .style("font-size", "12px")
             .style("alignment-baseline", "middle");
     });
-}).catch(error => console.error("Error loading GeoJSON:", error));
+}).catch(error => console.error("Error loading data:", error));
