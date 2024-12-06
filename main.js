@@ -54,10 +54,10 @@ d3.csv("colleges.csv").then((data) => {
         .style("text-anchor", "middle")
         .text("ACT Median");
 
-    // Define a color scale for public vs private
-    const colorScale = d3.scaleOrdinal()
-        .domain(["Public", "Private"])
-        .range(["#1f77b4", "#ff7f0e"]); // Colors for public and private
+    // // Define a color scale for public vs private
+    // const colorScale = d3.scaleOrdinal()
+    //     .domain(["Public", "Private"])
+    //     .range(["#1f77b4", "#ff7f0e"]); // Colors for public and private
 
     // Add circles for each college
     svg.selectAll("circle")
@@ -148,6 +148,26 @@ function resetRegions() {
         });
 }
 
+const colorScale = d3.scaleOrdinal()
+.domain(["Public", "Private"])
+.range(["#1f77b4", "#ff7f0e"]); // Colors for public and private
+
+
+function highlightScatterplot(selectedRegion) {
+    svg.selectAll("circle")
+        .attr("fill", (d) => {
+            return d.Region === selectedRegion
+                ? colorScale(d.Control) // Keep original color for matching region
+                : "#ccc"; // Grey out other circles
+        });
+}
+
+// Reset all scatterplot circles to their original colors
+function resetScatterplot() {
+    svg.selectAll("circle")
+        .attr("fill", (d) => colorScale(d.Control)); // Restore original colors
+}
+
 
 // US MAP (SVG 2)
 
@@ -231,6 +251,7 @@ Promise.all([
                         ? collegesInRegion.join("<br>")
                         : "No colleges")
                 );
+            highlightScatterplot(region);
         })
         .on("mousemove", function (event) {
             tooltip
@@ -239,6 +260,7 @@ Promise.all([
         })
         .on("mouseout", function () {
             tooltip.style("visibility", "hidden");
+            resetScatterplot();
         });
 
     // Add a legend
