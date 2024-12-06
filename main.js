@@ -1,3 +1,5 @@
+import { stateToRegion, regionColors } from './stateToRegion.js';
+
 // Set dimensions for the scatterplot
 const margin = { top: 50, right: 50, bottom: 50, left: 50 };
 const width = 800 - margin.left - margin.right;
@@ -120,3 +122,71 @@ d3.csv("colleges.csv").then((data) => {
             .style("alignment-baseline", "middle");
     });
 });
+
+
+// US MAP (SVG 2)
+
+// Create a container for the map
+const mapContainer = d3.select("body")
+    .append("div")
+    .attr("id", "map-container")
+    .style("display", "inline-block")
+    .style("vertical-align", "top");
+
+    const mapWidth = 800;
+    const mapHeight = 600;
+
+// Create the projection
+const projection = d3.geoAlbersUsa()
+    .scale(1100)
+    .translate([mapWidth / 2, mapHeight / 2]);
+
+// Path generator
+const path = d3.geoPath().projection(projection);
+
+// Append an SVG for the map
+const svg2 = mapContainer
+    .append("svg")
+    .attr("width", mapWidth)
+    .attr("height", mapHeight)
+    .style("border", "1px solid black");
+
+// Load GeoJSON or TopoJSON file
+d3.json("states.json").then((us) => {
+    const states = topojson.feature(us, us.objects.states).features;
+
+    // Draw the map
+    svg2.selectAll("path")
+        .data(states)
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .attr("fill", (d) => {
+            const stateName = d.properties.name; // State name from GeoJSON
+            const region = stateToRegion[stateName]; // Find the region
+            return region ? regionColors(region) : "#ccc"; // Assign color or default
+        })
+        .attr("stroke", "black")
+        .attr("stroke-width", 1);
+
+    // Add a legend
+    const legend = svg2.append("g")
+        .attr("transform", "translate(20,20)");
+
+    const regions = regionColors.domain();
+    regions.forEach((region, i) => {
+        legend.append("rect")
+            .attr("x", 0)
+            .attr("y", i * 20)
+            .attr("width", 15)
+            .attr("height", 15)
+            .attr("fill", regionColors(region));
+
+        legend.append("text")
+            .attr("x", 20)
+            .attr("y", i * 20 + 12)
+            .text(region)
+            .style("font-size", "12px")
+            .style("alignment-baseline", "middle");
+    });
+}).catch(error => console.error("Error loading GeoJSON:", error));

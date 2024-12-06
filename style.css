@@ -12,3 +12,18 @@ body {
 #main {
     margin: 20px;
 }
+#scatter-container, #map-container {
+    margin: 10px;
+}
+
+#scatter-container {
+    width: 800px;
+    height: 600px;
+    display: inline-block;
+}
+
+#map-container {
+    width: 800px;
+    height: 600px;
+    display: inline-block;
+}
