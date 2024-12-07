@@ -126,6 +126,19 @@ d3.csv("colleges.csv").then((data) => {
             .style("font-size", "12px")
             .style("alignment-baseline", "middle");
     });
+
+    d3.select("#hideZeroACT").on("change", function () {
+        const checked = d3.select(this).property("checked");
+    
+        // Filter circles based on ACT Median
+        svg.selectAll("circle")
+            .attr("display", (d) => {
+                if (checked && d["ACT Median"] === 0) {
+                    return "none"; // Hide circles with ACT Median of 0
+                }
+                return null; // Show circles otherwise
+            });
+    });
 });
 
 function highlightRegion(selectedRegion) {
