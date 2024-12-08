@@ -14,7 +14,7 @@ body {
 }
 
 #main {
-    margin: 20px;
+    margin: 0px;
 }
 #scatter-container, #map-container {
     margin: 10px;
@@ -37,5 +37,17 @@ body {
     width: 800px;
     height: 600px;
     display: inline-block;
-    margin-left: -100px;
+    margin-left: -50px;
+    margin-top: 55px;
+}
+
+#filter-container {
+    margin: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+#costFilter {
+    margin-left: 10px;
+    padding: 5px;
 }

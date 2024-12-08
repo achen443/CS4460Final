@@ -26,6 +26,7 @@ d3.csv("colleges.csv").then((data) => {
     data.forEach((d) => {
         d["ACT Median"] = +d["ACT Median"];
         d["Admission Rate"] = +d["Admission Rate"];
+        d["Average Cost"] = +d["Average Cost"];
     });
 
     // Set the scales
@@ -194,6 +195,34 @@ function highlightScatterplot(selectedRegion) {
 function resetScatterplot() {
     svg.selectAll("circle")
         .attr("fill", (d) => colorScale(d.Control)); // Restore original colors
+}
+
+//Filter Drop down
+d3.select("#costFilter").on("change", function () {
+    const selectedRange = this.value; // Get selected range
+    filterScatterplot(selectedRange);
+});
+
+function filterScatterplot(selectedRange) {
+    svg.selectAll("circle")
+        .attr("opacity", (d) => {
+            const cost = d["Average Cost"];
+            if (selectedRange === "all") return 1; // Show all points
+            if (selectedRange === "5000-10000") return cost > 5000 && cost <= 10000 ? 1 : 0.1;
+            if (selectedRange === "10000-20000") return cost > 10000 && cost <= 20000 ? 1 : 0.1;
+            if (selectedRange === "20000-40000") return cost > 20000 && cost <= 40000 ? 1 : 0.1;
+            if (selectedRange === "40000-60000") return cost > 40000 && cost <= 60000 ? 1 : 0.1;
+            if (selectedRange === "60000+") return cost > 60000 ? 1 : 0.1;
+        })
+        .attr("pointer-events", (d) => {
+            const cost = d["Average Cost"];
+            if (selectedRange === "all") return "all"; // Enable all pointss
+            if (selectedRange === "5000-10000") return cost > 5000 && cost <= 10000 ? "all" : "none";
+            if (selectedRange === "10000-20000") return cost > 10000 && cost <= 20000 ? "all" : "none";
+            if (selectedRange === "20000-40000") return cost > 20000 && cost <= 40000 ? "all" : "none";
+            if (selectedRange === "40000-60000") return cost > 40000 && cost <= 60000 ? "all" : "none";
+            if (selectedRange === "60000+") return cost > 60000 ? "all" : "none";
+        });
 }
 
 
