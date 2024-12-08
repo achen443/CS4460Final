@@ -8,8 +8,8 @@ const scatterContainer = d3.select("#scatterplot")
     
 // Set dimensions for the scatterplot
 const margin = { top: 50, right: 50, bottom: 50, left: 50 };
-const width = 800 - margin.left - margin.right;
-const height = 600 - margin.top - margin.bottom;
+const width = 750 - margin.left - margin.right;
+const height = 500 - margin.top - margin.bottom;
 
 // Append an SVG element to the body
 const svg = scatterContainer
@@ -198,13 +198,13 @@ const mapContainer = d3.select("body")
     .style("vertical-align", "top");
 
 // Set dimensions for the map
-const mapWidth = 800 - margin.left - margin.right;
-const mapHeight = 600 - margin.top - margin.bottom;
+const mapWidth = 600;
+const mapHeight = 500;
 
 // Create the projection
 const projection = d3.geoAlbersUsa()
-    .scale(1000)
-    .translate([mapWidth / 2 + 70, mapHeight / 2]);
+    .scale(900)
+    .translate([mapWidth / 2 + 100, mapHeight / 2]);
 
 // Path generator
 const path = d3.geoPath().projection(projection);
@@ -291,14 +291,14 @@ Promise.all([
     regions.forEach((region, i) => {
         legend.append("rect")
             .attr("x", 0)
-            .attr("y", i * 20)
+            .attr("y", (i * 20) - 60)
             .attr("width", 15)
             .attr("height", 15)
             .attr("fill", regionColors(region));
     
         legend.append("text")
             .attr("x", 20)
-            .attr("y", i * 20 + 12)
+            .attr("y", (i * 20) + 12 - 60)
             .text(region)
             .style("font-size", "12px")
             .style("alignment-baseline", "middle");

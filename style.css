@@ -22,9 +22,9 @@ body {
 
 #scatter-container {
     width: 800px;
-    height: 600px;
+    height: 500px;
     display: inline-block;
-    margin-left: 100px;
+    margin-left: 0px;
 }
 
 #verticalContainer {
@@ -37,4 +37,5 @@ body {
     width: 800px;
     height: 600px;
     display: inline-block;
+    margin-left: -100px;
 }
