@@ -1,5 +1,6 @@
 import { stateToRegion, regionColors } from './stateToRegion.js';
 
+// SVG for the scatterplot
 const scatterContainer = d3.select("#scatterplot")
     .append("div")
     .attr("id", "scatter-container")
@@ -18,12 +19,15 @@ const svg = scatterContainer
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-d3.csv("colleges.csv").then((data) => {
-    data.forEach((d) => {
-        d["ACT Median"] = +d["ACT Median"];
-        d["Admission Rate"] = +d["Admission Rate"];
-        d["Average Cost"] = +d["Average Cost"];
-    });
+    d3.csv("colleges.csv").then((data) => {
+        data = data
+            .filter(d => d.Name !== null && d.Name !== undefined && d.Name !== "")
+            .map(d => {
+                d["ACT Median"] = +d["ACT Median"];
+                d["Admission Rate"] = +d["Admission Rate"];
+                d["Average Cost"] = +d["Average Cost"];
+                return d;
+            });
 
     const xScale = d3
         .scaleLinear()
@@ -136,6 +140,10 @@ d3.csv("colleges.csv").then((data) => {
     });
 });
 
+// End of first SVG
+
+// Functions for highlighting
+
 function highlightRegion(selectedRegion) {
     svg2.selectAll("path")
         .attr("fill", (d) => {
@@ -201,6 +209,10 @@ function filterScatterplot(selectedRange) {
             if (selectedRange === "60000+") return cost > 60000 ? "all" : "none";
         });
 }
+
+// End of functions
+
+// Start of map SVG
 
 const mapContainer = d3.select("body")
     .append("div")
