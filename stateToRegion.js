@@ -1,7 +1,7 @@
 export const stateToRegion = {
     "Alabama": "Southeast",
     "Alaska": "Far West",
-    "Arizona": "Rocky Mountains",
+    "Arizona": "Southwest", // Updated
     "Arkansas": "Southeast",
     "California": "Far West",
     "Colorado": "Rocky Mountains",
@@ -29,19 +29,19 @@ export const stateToRegion = {
     "Nevada": "Rocky Mountains",
     "New Hampshire": "New England",
     "New Jersey": "Mid-Atlantic",
-    "New Mexico": "Rocky Mountains",
+    "New Mexico": "Southwest", // Updated
     "New York": "Mid-Atlantic",
     "North Carolina": "Southeast",
     "North Dakota": "Great Plains",
     "Ohio": "Great Lakes",
-    "Oklahoma": "Great Plains",
+    "Oklahoma": "Southwest", // Updated
     "Oregon": "Far West",
     "Pennsylvania": "Mid-Atlantic",
     "Rhode Island": "New England",
     "South Carolina": "Southeast",
     "South Dakota": "Great Plains",
     "Tennessee": "Southeast",
-    "Texas": "Great Plains",
+    "Texas": "Southwest", // Updated
     "Utah": "Rocky Mountains",
     "Vermont": "New England",
     "Virginia": "Southeast",
@@ -60,7 +60,8 @@ export const regionColors = d3.scaleOrdinal()
         "New England", 
         "Far West", 
         "Great Lakes", 
-        "Rocky Mountains"
+        "Rocky Mountains", 
+        "Southwest" // New region
     ])
     .range([
         "#e41a1c", // Great Plains
@@ -70,5 +71,6 @@ export const regionColors = d3.scaleOrdinal()
         "#ff7f00", // New England
         "#ffff33", // Far West
         "#a65628", // Great Lakes
-        "#f781bf"  // Rocky Mountains
+        "#f781bf", // Rocky Mountains
+        "#87CEEB"  // Southwest (new color)
     ]);
