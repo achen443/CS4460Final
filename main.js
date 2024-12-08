@@ -86,18 +86,27 @@ d3.csv("colleges.csv").then((data) => {
         .style("padding", "10px")
         .style("visibility", "hidden");
 
-    svg.selectAll("circle")
+        svg.selectAll("circle")
         .on("mouseover", function (event, d) {
+            // Specify the fields to include in the tooltip
+            const fieldsToDisplay = [
+                { label: "Name", value: d["Name"] },
+                { label: "Control", value: d["Control"] },
+                { label: "Region", value: d["Region"] },
+                { label: "Locale", value: d["Locale"] },
+                { label: "Admission Rate", value: d3.format(".0%")(d["Admission Rate"]) },
+                { label: "ACT Median", value: d["ACT Median"] },
+            ];
+    
+            // Build the tooltip content
+            const tooltipContent = fieldsToDisplay
+                .map(({ label, value }) => `<strong>${label}:</strong> ${value}`)
+                .join("<br>");
+    
             tooltip
                 .style("visibility", "visible")
-                .html(
-                    Object.entries(d)
-                        .map(([key, value]) => `<strong>${key}:</strong> ${value}`)
-                        .join("<br>")
-                );
-            const region = d.Region;
-            console.log(region);
-            highlightRegion(region);
+                .html(tooltipContent);
+            highlightRegion(d["Region"]);
         })
         .on("mousemove", function (event) {
             tooltip
