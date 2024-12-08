@@ -24,8 +24,15 @@ body {
     width: 800px;
     height: 600px;
     display: inline-block;
+    margin-left: 100px;
 }
 
+#verticalContainer {
+    display: flex; /* Make it a flex container */
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center the contents horizontally */
+    gap: 10px; /* Add spacing between scatterplot and checkbox */
+}
 #map-container {
     width: 800px;
     height: 600px;
